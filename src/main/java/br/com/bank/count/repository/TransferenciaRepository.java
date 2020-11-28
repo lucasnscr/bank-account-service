@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import br.com.bank.count.entity.Cliente;
 import br.com.bank.count.entity.Transferencia;
 
 public interface TransferenciaRepository extends CrudRepository<Transferencia, Long>{
 	
-	List<Transferencia> findByCliente(Cliente cliente);
+	List<Transferencia> findById(String id);
 
 }

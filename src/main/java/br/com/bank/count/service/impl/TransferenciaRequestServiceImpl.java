@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import br.com.bank.count.dto.TransferenciaDto;
 import br.com.bank.count.enums.BankBussinessErrorCodeEnum;
 import br.com.bank.count.enums.EventEnum;
 import br.com.bank.count.exception.BankBussinessException;
+import br.com.bank.count.exception.BankException;
 import br.com.bank.count.service.EventBidingService;
 import br.com.bank.count.service.TransferenciaRequestService;
 import br.com.bank.count.utils.TransferenciaValidateUtils;
@@ -26,6 +28,7 @@ public class TransferenciaRequestServiceImpl implements TransferenciaRequestServ
 		this.validateUtils = validateUtils;
 	}
 	
+	@Transactional
 	@Override
 	public HttpStatus solicitaTransferencia(TransferenciaDto transferenciaDto) {
 		try {
@@ -42,7 +45,8 @@ public class TransferenciaRequestServiceImpl implements TransferenciaRequestServ
 				throw new BankBussinessException(BankBussinessErrorCodeEnum.DADOS_INVALIDO);
 			}
 		} catch (BankBussinessException e) {
-			throw new BankBussinessException(BankBussinessErrorCodeEnum.ERRO_PROCESSAR_MENSAGEM);
+			throw new BankException(e.getMessage(), e.getCodError(), e.getOperation(), e.getOrigin(), e.getHttpStatus());
 		}
 	}
 }
+

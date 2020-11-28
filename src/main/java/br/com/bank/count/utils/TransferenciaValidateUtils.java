@@ -48,10 +48,6 @@ public class TransferenciaValidateUtils {
 			throw new BankBussinessException(BankBussinessErrorCodeEnum.TRANSFERENCIA_LIMITE);
 		}
 
-		if (buscarClienteEnvia.getValor().doubleValue() < valor.doubleValue()) {
-			throw new BankBussinessException(BankBussinessErrorCodeEnum.SALDO_INVALIDO);
-		}
-
 	}
 
 }

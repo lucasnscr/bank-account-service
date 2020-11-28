@@ -1,5 +1,6 @@
 package br.com.bank.count.listener;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.Message;
@@ -18,6 +19,7 @@ public class TransferenciaListener {
 	
 	private TransferenciaResponseService tranResponseService;
 	
+	@Autowired
 	public TransferenciaListener(TransferenciaResponseService tranResponseService) {
 		this.tranResponseService = tranResponseService;
 	}
@@ -25,11 +27,9 @@ public class TransferenciaListener {
 	
 	@StreamListener(target = EventEnum.INPUT, condition = "headers['TRANSFERENCIA']=='EVENT_TRANSFERENCIA'")
 	public void getTransferencia(Message<TransferenciaDto> msgTransferenciaDto) {
-		
-		final TransferenciaDto payload = msgTransferenciaDto.getPayload();
-		
 		try {
-			tranResponseService.realizaTransferencia(payload.getClienteEnvia(), payload.getClienteRecebe(), payload.getValor());
+			TransferenciaDto payload = msgTransferenciaDto.getPayload();
+			tranResponseService.realizaTransferencia(payload);
 		} catch (BankBussinessException e) {
 			throw new BankBussinessException(BankBussinessErrorCodeEnum.ERRO_PROCESSAR_MENSAGEM);
 		}

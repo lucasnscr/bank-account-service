@@ -95,14 +95,16 @@ public class ClienteServiceImpl implements ClienteService {
 		int saldoDescontado = Math.subtractExact(clienteEnvia.getValor().intValue(), valorTransferencia.intValue());
 		BigDecimal novoSaldoEnvia = new BigDecimal(saldoDescontado);
 		clienteEnvia.setValor(novoSaldoEnvia);
+		cliRepo.delete(clienteEnvia);
 		Cliente saveEnvia = cliRepo.save(clienteEnvia);
 
 		int saldoRecebe = Math.addExact(clienteRecebe.getValor().intValue(), valorTransferencia.intValue());
 		BigDecimal novoSaldoRecebe = new BigDecimal(saldoRecebe);
 		clienteRecebe.setValor(novoSaldoRecebe);
+		cliRepo.delete(clienteRecebe);
 		Cliente saveRecebe = cliRepo.save(clienteRecebe);
 
-		if (ObjectUtils.isEmpty(saveEnvia) && ObjectUtils.isEmpty(saveRecebe)) {
+		if (!ObjectUtils.isEmpty(saveEnvia) && !ObjectUtils.isEmpty(saveRecebe)) {
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;

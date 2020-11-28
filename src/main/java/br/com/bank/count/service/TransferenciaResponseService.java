@@ -1,11 +1,9 @@
 package br.com.bank.count.service;
 
-import java.math.BigDecimal;
-
-import br.com.bank.count.entity.Cliente;
+import br.com.bank.count.dto.TransferenciaDto;
 
 public interface TransferenciaResponseService {
 
-	void realizaTransferencia(Cliente clienteEnvia, Cliente clienteRecebe, BigDecimal valorTransferencia);
+	void realizaTransferencia(TransferenciaDto transferenciaDto);
 
 }

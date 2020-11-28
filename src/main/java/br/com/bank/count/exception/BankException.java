@@ -48,8 +48,13 @@ public class BankException extends RuntimeException {
 		
 		
 	}
-
-
 	
-
+	public BankException(String message,  Integer codError, String origin, String operation, HttpStatus httpStatus) {
+		super(message);
+		this.message = message;
+		this.codError = codError;
+		this.httpStatus = httpStatus;
+		this.origin = origin;
+		this.operation = operation;
+	}
 }

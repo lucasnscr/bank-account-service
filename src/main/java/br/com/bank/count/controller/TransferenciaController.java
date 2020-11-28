@@ -1,6 +1,5 @@
 package br.com.bank.count.controller;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -8,7 +7,6 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +17,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.bank.count.dto.TransferenciaDto;
 import br.com.bank.count.dto.TransferenciaDtoResponse;
-import br.com.bank.count.entity.Cliente;
 import br.com.bank.count.exception.BankBussinessException;
+import br.com.bank.count.exception.BankException;
 import br.com.bank.count.service.TransferenciaRequestService;
 import br.com.bank.count.service.TransferenciaService;
 
@@ -56,6 +54,8 @@ public class TransferenciaController {
 			HttpStatus solicitaTransferencia = tranRequestService.solicitaTransferencia(transferenciaDto);
 			return solicitaTransferencia;
 		} catch (BankBussinessException e) {
+			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+		} catch (BankException e) {
 			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
 		}
 	}

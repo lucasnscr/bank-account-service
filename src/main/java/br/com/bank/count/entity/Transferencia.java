@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,7 +30,9 @@ public class Transferencia implements Serializable {
 	
 	@Id
 	private String id;
+	@Indexed
 	private Cliente clienteEnvia;
+	@Indexed
 	private Cliente clienteRecebe;
 	private BigDecimal valor;
 	private Status status;

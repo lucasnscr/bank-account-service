@@ -2,6 +2,8 @@ package br.com.bank.count.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,20 +33,23 @@ public class TransferenciaServiceImpl implements TransferenciaService {
 	@Override
 	public List<TransferenciaDtoResponse> listTransferencias(String numConta) {
 		List<TransferenciaDtoResponse> transferenciaDtoResponse = null;
-		List<Cliente> cliList = cliRepository.findByNumConta(numConta);
-		if (!CollectionUtils.isEmpty(cliList)) {
-			Cliente cliente = cliList.get(0);
-			List<Transferencia> findByTransferenciaList = transRepository.findByCliente(cliente);
-			if (CollectionUtils.isEmpty(findByTransferenciaList)) {
+		List<Cliente> clinteList = cliRepository.findByNumConta(numConta);
+		if (!CollectionUtils.isEmpty(clinteList)) {
+			Cliente cliente = clinteList.get(0);
+			Iterable<Transferencia> transferenciaIt = transRepository.findAll();
+			if (null != transferenciaIt) {
+				List<Transferencia> list = toList(transferenciaIt);
 				transferenciaDtoResponse = new ArrayList<TransferenciaDtoResponse>();
-				for (Transferencia transferencia : findByTransferenciaList) {
-					TransferenciaDtoResponse response = new TransferenciaDtoResponse();
-					response.setId(transferencia.getId());
-					response.setClienteEnvia(transferencia.getClienteEnvia());
-					response.setClienteRecebe(transferencia.getClienteRecebe());
-					response.setStatus(transferencia.getStatus());
-					response.setValor(transferencia.getValor());
-					transferenciaDtoResponse.add(response);
+				for (Transferencia transferencia : list) {
+					if (transferencia.getClienteEnvia().equals(cliente)) {
+						TransferenciaDtoResponse response = new TransferenciaDtoResponse();
+						response.setId(transferencia.getId());
+						response.setClienteEnvia(transferencia.getClienteEnvia());
+						response.setClienteRecebe(transferencia.getClienteRecebe());
+						response.setStatus(transferencia.getStatus());
+						response.setValor(transferencia.getValor());
+						transferenciaDtoResponse.add(response);
+					}
 				}
 				return transferenciaDtoResponse;
 			}
@@ -55,6 +60,10 @@ public class TransferenciaServiceImpl implements TransferenciaService {
 		return transferenciaDtoResponse;
 	}
 	
+	
+	private static <T> List<T> toList(final Iterable<T> iterable) {
+		return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
+	}
 	
 	
 }
