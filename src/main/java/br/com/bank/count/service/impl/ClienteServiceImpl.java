@@ -80,9 +80,11 @@ public class ClienteServiceImpl implements ClienteService {
 			if (!CollectionUtils.isEmpty(clinteList)) {
 				Cliente cliente = clinteList.get(0);
 				cliDto = new ClienteDto(cliente);
+			}else {
+				throw new BankBussinessException(BankBussinessErrorCodeEnum.BUSCA_SEM_RESULTADO);
 			}
 		} else {
-			throw new BankBussinessException(BankBussinessErrorCodeEnum.BUSCA_SEM_RESULTADO);
+			throw new BankBussinessException(BankBussinessErrorCodeEnum.DADOS_INVALIDO);
 		}
 		return cliDto;
 	}

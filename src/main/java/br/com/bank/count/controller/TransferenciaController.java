@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.bank.count.dto.TransferenciaDto;
 import br.com.bank.count.entity.Cliente;
+import br.com.bank.count.exception.BankBussinessException;
 import br.com.bank.count.service.TransferenciaRequestService;
 import br.com.bank.count.service.TransferenciaService;
 
@@ -36,15 +38,24 @@ public class TransferenciaController {
 	@GetMapping("/")
 	public
 	ResponseEntity<List<TransferenciaDto>> listTransferencias(@PathVariable("numConta") String numConta) {
-		List<TransferenciaDto> transferenciaDtoList = tranService.listTransferencias(numConta);
-		return ResponseEntity.ok(transferenciaDtoList);
+		try {
+			List<TransferenciaDto> transferenciaDtoList = tranService.listTransferencias(numConta);
+			return ResponseEntity.ok(transferenciaDtoList);
+			
+		} catch (BankBussinessException e) {
+			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+		}
 	}
 
 	@PostMapping
 	public
 	HttpStatus realizaTransferencia(@Valid @RequestBody Cliente clienteEnvia, Cliente clienteRecebe, BigDecimal valor,  UriComponentsBuilder uriBuilder) {
-		HttpStatus solicitaTransferencia = tranRequestService.solicitaTransferencia(clienteEnvia, clienteRecebe, valor);
-		return solicitaTransferencia;
+		try {
+			HttpStatus solicitaTransferencia = tranRequestService.solicitaTransferencia(clienteEnvia, clienteRecebe, valor);
+			return solicitaTransferencia;
+		} catch (BankBussinessException e) {
+			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+		}
 	}
 
 }

@@ -1,7 +1,5 @@
 package br.com.bank.count.enums;
 
-import java.util.Properties;
-
 import org.springframework.http.HttpStatus;
 
 public enum BankBussinessErrorCodeEnum implements IErrorCode{
@@ -28,7 +26,6 @@ public enum BankBussinessErrorCodeEnum implements IErrorCode{
 			this.message = message;
 			this.operation = operation;
 			this.origin = origin;
-			this.properties.put(codError, this);
 		
 	}
 	
@@ -36,7 +33,6 @@ public enum BankBussinessErrorCodeEnum implements IErrorCode{
 	private  Integer codError;
 	private  String origin;
 	private  String operation;
-	private Properties properties;
 	private  HttpStatus httpCode;
 	
 	@Override
@@ -57,11 +53,6 @@ public enum BankBussinessErrorCodeEnum implements IErrorCode{
 	@Override
 	public String getOperation() {
 		return operation;
-	}
-	
-	@Override
-	public Properties getProperties() {
-		return properties;
 	}
 	
 	@Override

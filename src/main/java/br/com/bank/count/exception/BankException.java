@@ -3,11 +3,13 @@ package br.com.bank.count.exception;
 import java.lang.reflect.Constructor;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import br.com.bank.count.enums.IErrorCode;
 import lombok.Getter;
 
 @Getter
+@ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
 public class BankException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
