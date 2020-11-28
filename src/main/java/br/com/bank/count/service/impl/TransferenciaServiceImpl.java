@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import br.com.bank.count.dto.TransferenciaDto;
+import br.com.bank.count.dto.TransferenciaDtoResponse;
 import br.com.bank.count.entity.Cliente;
 import br.com.bank.count.entity.Transferencia;
 import br.com.bank.count.enums.BankBussinessErrorCodeEnum;
@@ -29,24 +29,30 @@ public class TransferenciaServiceImpl implements TransferenciaService {
 	}
 
 	@Override
-	public List<TransferenciaDto> listTransferencias(String numConta) {
-		List<TransferenciaDto> transferenciaDto = null;
+	public List<TransferenciaDtoResponse> listTransferencias(String numConta) {
+		List<TransferenciaDtoResponse> transferenciaDtoResponse = null;
 		List<Cliente> cliList = cliRepository.findByNumConta(numConta);
 		if (!CollectionUtils.isEmpty(cliList)) {
 			Cliente cliente = cliList.get(0);
 			List<Transferencia> findByTransferenciaList = transRepository.findByCliente(cliente);
 			if (CollectionUtils.isEmpty(findByTransferenciaList)) {
-				transferenciaDto = new ArrayList<TransferenciaDto>();
+				transferenciaDtoResponse = new ArrayList<TransferenciaDtoResponse>();
 				for (Transferencia transferencia : findByTransferenciaList) {
-					transferenciaDto.add(new TransferenciaDto(transferencia));
+					TransferenciaDtoResponse response = new TransferenciaDtoResponse();
+					response.setId(transferencia.getId());
+					response.setClienteEnvia(transferencia.getClienteEnvia());
+					response.setClienteRecebe(transferencia.getClienteRecebe());
+					response.setStatus(transferencia.getStatus());
+					response.setValor(transferencia.getValor());
+					transferenciaDtoResponse.add(response);
 				}
-				return transferenciaDto;
+				return transferenciaDtoResponse;
 			}
 			
 		}else {
 			throw new BankBussinessException(BankBussinessErrorCodeEnum.DADOS_INVALIDO);
 		}
-		return transferenciaDto;
+		return transferenciaDtoResponse;
 	}
 	
 	

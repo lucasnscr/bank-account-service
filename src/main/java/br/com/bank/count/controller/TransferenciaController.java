@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.bank.count.dto.TransferenciaDto;
+import br.com.bank.count.dto.TransferenciaDtoResponse;
 import br.com.bank.count.entity.Cliente;
 import br.com.bank.count.exception.BankBussinessException;
 import br.com.bank.count.service.TransferenciaRequestService;
@@ -38,9 +39,9 @@ public class TransferenciaController {
 
 	@GetMapping("/")
 	public
-	ResponseEntity<List<TransferenciaDto>> listTransferencias(@RequestParam("numConta") String numConta) {
+	ResponseEntity<List<TransferenciaDtoResponse>> listTransferencias(@RequestParam("numConta") String numConta) {
 		try {
-			List<TransferenciaDto> transferenciaDtoList = tranService.listTransferencias(numConta);
+			List<TransferenciaDtoResponse> transferenciaDtoList = tranService.listTransferencias(numConta);
 			return ResponseEntity.ok(transferenciaDtoList);
 			
 		} catch (BankBussinessException e) {

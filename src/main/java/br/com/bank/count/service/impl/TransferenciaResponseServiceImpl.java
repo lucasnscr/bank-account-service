@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import br.com.bank.count.dto.TransferenciaDto;
 import br.com.bank.count.entity.Cliente;
 import br.com.bank.count.entity.Transferencia;
 import br.com.bank.count.entity.Transferencia.Status;
@@ -24,16 +23,15 @@ public class TransferenciaResponseServiceImpl implements TransferenciaResponseSe
 	private ClienteService cliService;
 
 	@Autowired
-	public TransferenciaResponseServiceImpl(TransferenciaRepository transRepository, TransferenciaValidateUtils validateUtils, ClienteService cliService) {
+	public TransferenciaResponseServiceImpl(TransferenciaRepository transRepository,
+			TransferenciaValidateUtils validateUtils, ClienteService cliService) {
 		this.transRepository = transRepository;
 		this.validateUtils = validateUtils;
 		this.cliService = cliService;
 	}
 
 	@Override
-	public TransferenciaDto realizaTransferencia(Cliente clienteEnvia, Cliente clienteRecebe,
-			BigDecimal valorTransferencia) {
-		TransferenciaDto transferenciaDto = null;
+	public void realizaTransferencia(Cliente clienteEnvia, Cliente clienteRecebe, BigDecimal valorTransferencia) {
 		try {
 			validateUtils.validateTransfer(clienteEnvia, clienteRecebe, valorTransferencia);
 			if (ObjectUtils.isEmpty(clienteEnvia) && ObjectUtils.isEmpty(clienteRecebe)) {
@@ -46,37 +44,21 @@ public class TransferenciaResponseServiceImpl implements TransferenciaResponseSe
 					tran.setClienteRecebe(clienteRecebe);
 					tran.setValor(valorTransferencia);
 					tran.setStatus(Status.SUCESSO);
-					Transferencia save = transRepository.save(tran);
-					if (!ObjectUtils.isEmpty(save)) {
-						transferenciaDto = new TransferenciaDto(save);
-						return transferenciaDto;
-					}
+					transRepository.save(tran);
 				}
 			}
 
 		} catch (BankBussinessException e) {
-			TransferenciaDto saveTransactionError = saveTransactionError(clienteEnvia, clienteRecebe,
-					valorTransferencia);
-			return saveTransactionError;
+			saveTransactionError(clienteEnvia, clienteRecebe, valorTransferencia);
 		}
-
-		return transferenciaDto;
 	}
 
-	private TransferenciaDto saveTransactionError(Cliente clienteEnvia, Cliente clienteRecebe, BigDecimal valor) {
+	private void saveTransactionError(Cliente clienteEnvia, Cliente clienteRecebe, BigDecimal valor) {
 		Transferencia tran = new Transferencia();
-		TransferenciaDto tranResponse = new TransferenciaDto();
 		tran.setClienteEnvia(clienteEnvia);
 		tran.setClienteRecebe(clienteRecebe);
 		tran.setValor(valor);
 		tran.setStatus(Status.ERRO);
-		Transferencia transferencia = transRepository.save(tran);
-		if (!ObjectUtils.isEmpty(transferencia)) {
-			tranResponse = new TransferenciaDto(transferencia);
-
-			return tranResponse;
-		}
-		return null;
+		transRepository.save(tran);
 	}
-
 }

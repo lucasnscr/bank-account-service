@@ -12,12 +12,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransferenciaDto implements Serializable{
+public class TransferenciaDtoResponse implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
+	private String id;
 	private Cliente clienteEnvia;
 	private Cliente clienteRecebe;
 	private BigDecimal valor;
+	private Status status;
 	
 }
