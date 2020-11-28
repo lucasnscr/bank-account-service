@@ -1,12 +1,6 @@
 package br.com.bank.count.exception;
 
-import java.lang.reflect.Constructor;
-
-import org.springframework.http.HttpStatus;
-
-import br.com.bank.count.enums.BankBussinessErrorCodeEnum;
 import br.com.bank.count.enums.IErrorCode;
-import lombok.AllArgsConstructor;
 
 public class BankBussinessException extends BankException {
 

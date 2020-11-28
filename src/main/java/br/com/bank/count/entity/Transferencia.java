@@ -28,7 +28,7 @@ public class Transferencia implements Serializable {
 	}
 	
 	@Id
-	private Long id;
+	private String id;
 	private Cliente clienteEnvia;
 	private Cliente clienteRecebe;
 	private BigDecimal valor;

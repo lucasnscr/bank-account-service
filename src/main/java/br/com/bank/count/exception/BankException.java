@@ -5,9 +5,9 @@ import java.lang.reflect.Constructor;
 import org.springframework.http.HttpStatus;
 
 import br.com.bank.count.enums.IErrorCode;
-import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@AllArgsConstructor
+@Getter
 public class BankException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

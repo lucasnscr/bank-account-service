@@ -3,6 +3,7 @@ package br.com.bank.count.service.impl;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.support.MessageBuilder;
@@ -19,6 +20,7 @@ public class TransferenciaRequestServiceImpl implements TransferenciaRequestServ
 	
 	private EventBidingService serviceBiding;
 	
+	@Autowired
 	public TransferenciaRequestServiceImpl(EventBidingService serviceBiding) {
 		this.serviceBiding = serviceBiding;
 	}

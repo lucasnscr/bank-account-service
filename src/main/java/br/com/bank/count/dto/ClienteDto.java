@@ -17,15 +17,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ClienteDto implements Serializable{
 	
+
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
+	private String id;
 
 	@NotBlank  @Size(max=100)
 	private String nome;
 
-	@NotBlank  @Size(max=19)
-	private Integer numConta;
+	@NotBlank  @Size(max=20)
+	private String numConta;
 
 	@NotNull
 	private BigDecimal valor;

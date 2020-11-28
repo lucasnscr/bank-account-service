@@ -6,6 +6,6 @@ import br.com.bank.count.dto.TransferenciaDto;
 
 public interface TransferenciaService {
 
-	List<TransferenciaDto> listTransferencias(Integer numConta);
+	List<TransferenciaDto> listTransferencias(String numConta);
 	
 }

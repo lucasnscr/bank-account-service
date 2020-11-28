@@ -3,33 +3,38 @@ package br.com.bank.count.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
 
-import br.com.bank.count.dto.ClienteDto;
 import br.com.bank.count.dto.TransferenciaDto;
 import br.com.bank.count.entity.Cliente;
 import br.com.bank.count.entity.Transferencia;
 import br.com.bank.count.enums.BankBussinessErrorCodeEnum;
 import br.com.bank.count.exception.BankBussinessException;
+import br.com.bank.count.repository.ClienteRepository;
 import br.com.bank.count.repository.TransferenciaRepository;
-import br.com.bank.count.service.ClienteService;
 import br.com.bank.count.service.TransferenciaService;
 
 @Service
 public class TransferenciaServiceImpl implements TransferenciaService {
 
 	private TransferenciaRepository transRepository;
-	private ClienteService cliService;
+	private ClienteRepository cliRepository;
+	
+	@Autowired
+	public TransferenciaServiceImpl(TransferenciaRepository transRepository, ClienteRepository cliRepository) {
+		this.transRepository = transRepository;
+		this.cliRepository = cliRepository;
+	}
 
 	@Override
-	public List<TransferenciaDto> listTransferencias(Integer numConta) {
+	public List<TransferenciaDto> listTransferencias(String numConta) {
 		List<TransferenciaDto> transferenciaDto = null;
-		ClienteDto clienteDto = cliService.buscarClienteNumConta(numConta);
-		if (!ObjectUtils.isEmpty(clienteDto)) {
-			Cliente cli = new Cliente(clienteDto.getId(), clienteDto.getNumConta(), clienteDto.getNome(), clienteDto.getValor());
-			List<Transferencia> findByTransferenciaList = transRepository.findByCliente(cli);
+		List<Cliente> cliList = cliRepository.findByNumConta(numConta);
+		if (!CollectionUtils.isEmpty(cliList)) {
+			Cliente cliente = cliList.get(0);
+			List<Transferencia> findByTransferenciaList = transRepository.findByCliente(cliente);
 			if (CollectionUtils.isEmpty(findByTransferenciaList)) {
 				transferenciaDto = new ArrayList<TransferenciaDto>();
 				for (Transferencia transferencia : findByTransferenciaList) {

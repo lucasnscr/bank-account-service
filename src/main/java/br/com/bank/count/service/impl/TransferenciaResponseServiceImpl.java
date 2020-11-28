@@ -2,6 +2,7 @@ package br.com.bank.count.service.impl;
 
 import java.math.BigDecimal;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -23,6 +24,12 @@ public class TransferenciaResponseServiceImpl implements TransferenciaResponseSe
 
 	private TransferenciaRepository transRepository;
 	private ClienteService cliService;
+
+	@Autowired
+	public TransferenciaResponseServiceImpl(TransferenciaRepository transRepository, ClienteService cliService) {
+		this.transRepository = transRepository;
+		this.cliService = cliService;
+	}
 
 	@Override
 	public TransferenciaDto realizaTransferencia(Cliente clienteEnvia, Cliente clienteRecebe,
@@ -50,7 +57,8 @@ public class TransferenciaResponseServiceImpl implements TransferenciaResponseSe
 			}
 
 		} catch (BankBussinessException e) {
-			TransferenciaDto saveTransactionError = saveTransactionError(clienteEnvia, clienteRecebe, valorTransferencia);
+			TransferenciaDto saveTransactionError = saveTransactionError(clienteEnvia, clienteRecebe,
+					valorTransferencia);
 			return saveTransactionError;
 		}
 
@@ -67,15 +75,13 @@ public class TransferenciaResponseServiceImpl implements TransferenciaResponseSe
 		Transferencia transferencia = transRepository.save(tran);
 		if (!ObjectUtils.isEmpty(transferencia)) {
 			tranResponse = new TransferenciaDto(transferencia);
-		
-			
-			
+
 			return tranResponse;
 		}
 		return null;
 	}
 
-	private void validateTransfer(Cliente cliEnvia, Cliente cliRecebe, BigDecimal valor) throws BankBussinessException {
+	private void validateTransfer(Cliente cliEnvia, Cliente cliRecebe, BigDecimal valor) {
 
 		if (ObjectUtils.isEmpty(cliEnvia)) {
 			throw new BankBussinessException(BankBussinessErrorCodeEnum.DADOS_INVALIDO);
@@ -85,12 +91,14 @@ public class TransferenciaResponseServiceImpl implements TransferenciaResponseSe
 			throw new BankBussinessException(BankBussinessErrorCodeEnum.DADOS_INVALIDO);
 		}
 
-		ClienteDto buscarClienteEnvia = cliService.buscarClienteNumConta(cliEnvia.getNumConta());
+		ClienteDto buscarClienteEnvia;
+		buscarClienteEnvia = cliService.buscarClienteNumConta(cliEnvia.getNumConta());
 		if (ObjectUtils.isEmpty(buscarClienteEnvia)) {
 			throw new BankBussinessException(BankBussinessErrorCodeEnum.NAO_EXISTE_CLIENTE_ENVIO);
 		}
 
-		ClienteDto buscarClienteRecebe = cliService.buscarClienteNumConta(cliRecebe.getNumConta());
+		ClienteDto buscarClienteRecebe;
+		buscarClienteRecebe = cliService.buscarClienteNumConta(cliRecebe.getNumConta());
 		if (ObjectUtils.isEmpty(buscarClienteRecebe)) {
 			throw new BankBussinessException(BankBussinessErrorCodeEnum.NAO_EXISTE_CLIENTE_RECEBE);
 		}
@@ -104,5 +112,5 @@ public class TransferenciaResponseServiceImpl implements TransferenciaResponseSe
 		}
 
 	}
-	
+
 }

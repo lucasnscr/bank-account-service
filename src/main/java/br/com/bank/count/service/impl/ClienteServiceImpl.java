@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -18,31 +19,35 @@ import br.com.bank.count.repository.ClienteRepository;
 import br.com.bank.count.service.ClienteService;
 
 @Service
-public class ClienteServiceImpl implements ClienteService{
-	
+public class ClienteServiceImpl implements ClienteService {
+
 	private ClienteRepository cliRepo;
 
+	@Autowired
+	public ClienteServiceImpl(ClienteRepository cliRepo) {
+		this.cliRepo = cliRepo;
+	}
+
 	@Override
-	public Long cadastraCliente(ClienteDto clienteDto) {
-		Long cliDto = null;
+	public String cadastraCliente(ClienteDto clienteDto) {
+		String cliDto = null;
 		if (!ObjectUtils.isEmpty(clienteDto)) {
-			Cliente cliData = cliRepo.findByNumConta(clienteDto.getNumConta());
-			if (ObjectUtils.isEmpty(cliData)) {
+			List<Cliente> clinteList = cliRepo.findByNumConta(clienteDto.getNumConta());
+			if (CollectionUtils.isEmpty(clinteList)) {
 				Cliente cliente = new Cliente();
 				cliente.setNome(clienteDto.getNome());
 				cliente.setNumConta(clienteDto.getNumConta());
 				cliente.setValor(clienteDto.getValor());
 				Cliente cli = cliRepo.save(cliente);
-				if (ObjectUtils.isEmpty(cli)) {
+				if (!ObjectUtils.isEmpty(cli)) {
 					cliDto = cli.getId();
-				}else {
+				} else {
 					throw new BankBussinessException(BankBussinessErrorCodeEnum.ERRO_GRAVAR_DADO);
 				}
-				
-			}else {
+
+			} else {
 				throw new BankBussinessException(BankBussinessErrorCodeEnum.CLIENTE_EXISTENTE);
 			}
-			
 		}
 		return cliDto;
 	}
@@ -58,57 +63,52 @@ public class ClienteServiceImpl implements ClienteService{
 				for (Cliente cliente : clienteList) {
 					clienteDtoList.add(new ClienteDto(cliente));
 				}
-				
+
 			}
-		}else {
+		} else {
 			throw new BankBussinessException(BankBussinessErrorCodeEnum.BUSCA_SEM_RESULTADO);
 		}
-		
-		
+
 		return clienteDtoList;
 	}
 
 	@Override
-	public ClienteDto buscarClienteNumConta(Integer numConta) {
+	public ClienteDto buscarClienteNumConta(String numConta) {
 		ClienteDto cliDto = null;
 		if (!ObjectUtils.isEmpty(numConta)) {
-			Cliente cliente = cliRepo.findByNumConta(numConta);
-			if (!ObjectUtils.isEmpty(cliente)) {
-				cliDto =  new ClienteDto(cliente);
+			List<Cliente> clinteList = cliRepo.findByNumConta(numConta);
+			if (!CollectionUtils.isEmpty(clinteList)) {
+				Cliente cliente = clinteList.get(0);
+				cliDto = new ClienteDto(cliente);
 			}
-		}else {
+		} else {
 			throw new BankBussinessException(BankBussinessErrorCodeEnum.BUSCA_SEM_RESULTADO);
 		}
 		return cliDto;
 	}
 
-
 	@Override
 	public Boolean debitarValorDaTransacao(Cliente clienteEnvia, Cliente clienteRecebe, BigDecimal valorTransferencia) {
-		
+
 		int saldoDescontado = Math.subtractExact(clienteEnvia.getValor().intValue(), valorTransferencia.intValue());
 		BigDecimal novoSaldoEnvia = new BigDecimal(saldoDescontado);
 		clienteEnvia.setValor(novoSaldoEnvia);
 		Cliente saveEnvia = cliRepo.save(clienteEnvia);
-		
+
 		int saldoRecebe = Math.addExact(clienteRecebe.getValor().intValue(), valorTransferencia.intValue());
 		BigDecimal novoSaldoRecebe = new BigDecimal(saldoRecebe);
 		clienteRecebe.setValor(novoSaldoRecebe);
 		Cliente saveRecebe = cliRepo.save(clienteRecebe);
-		
-		
+
 		if (ObjectUtils.isEmpty(saveEnvia) && ObjectUtils.isEmpty(saveRecebe)) {
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
-		
+
 	}
 
 	private static <T> List<T> toList(final Iterable<T> iterable) {
-		return StreamSupport.stream(iterable.spliterator(), false)
-				.collect(Collectors.toList());
+		return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
 	}
-
-	
 
 }

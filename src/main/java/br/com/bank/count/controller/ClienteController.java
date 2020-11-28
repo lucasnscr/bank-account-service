@@ -2,6 +2,9 @@ package br.com.bank.count.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +25,11 @@ public class ClienteController {
 
 	private ClienteService cliService;
 	
+	@Autowired
+	public ClienteController(ClienteService cliService) {
+		this.cliService = cliService;
+	}
+	
 	@GetMapping("/todos")
 	public
 	ResponseEntity<List<ClienteDto>> listCliente() {
@@ -31,16 +39,16 @@ public class ClienteController {
 
 	@GetMapping("/")
 	public
-	ResponseEntity<ClienteDto> buscaPorNumConta(@PathVariable("id") Integer numConta) {
+	ResponseEntity<ClienteDto> buscaPorNumConta(@PathVariable("id") String numConta) {
 		ClienteDto buscaClienteNumConta = cliService.buscarClienteNumConta(numConta);
 		return ResponseEntity.ok(buscaClienteNumConta);
 	}
 
 	@PostMapping
 	public
-	ResponseEntity<Long> cadastraCliente(@RequestBody ClienteDto clienteDto, UriComponentsBuilder uriBuilder) {
-		Long cadastraCliente = cliService.cadastraCliente(clienteDto);
-		ResponseEntity<Long> responseEntity = new ResponseEntity<>(cadastraCliente,HttpStatus.CREATED);
+	ResponseEntity<String> cadastraCliente(@Valid @RequestBody ClienteDto clienteDto, UriComponentsBuilder uriBuilder) {
+		String cadastraCliente = cliService.cadastraCliente(clienteDto);
+		ResponseEntity<String> responseEntity = new ResponseEntity<>(cadastraCliente,HttpStatus.CREATED);
 		responseEntity.created(uriBuilder.path("/Clientes/{id}").buildAndExpand(cadastraCliente).toUri());
 		return responseEntity;
 	}

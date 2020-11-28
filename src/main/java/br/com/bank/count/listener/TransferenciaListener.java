@@ -24,7 +24,7 @@ public class TransferenciaListener {
 	
 	
 	@StreamListener(target = EventEnum.INPUT, condition = "headers['TRANSFERENCIA']=='EVENT_TRANSFERENCIA'")
-	public void getTransferencia(Message<TransferenciaDto> msgTransferenciaDto) {
+	public void getTransferencia(Message<TransferenciaDto> msgTransferenciaDto) throws Exception {
 		
 		final TransferenciaDto payload = msgTransferenciaDto.getPayload();
 		

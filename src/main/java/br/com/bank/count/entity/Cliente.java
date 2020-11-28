@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,8 +23,11 @@ public class Cliente implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	private Long id;
-	private Integer numConta;
+	private String id;
+
+	@Indexed
+	private String numConta;
+	
 	private String nome;
 	private BigDecimal valor;
 

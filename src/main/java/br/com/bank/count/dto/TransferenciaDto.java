@@ -16,12 +16,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TransferenciaDto implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
+	
 	public TransferenciaDto(Transferencia transferencia) {
 		this(transferencia.getId(), transferencia.getClienteEnvia(), transferencia.getClienteRecebe(), transferencia.getValor(), transferencia.getStatus(), LocalDateTime.now());
 	}
 	
-	private static final long serialVersionUID = 1L;
-	private Long id;
+	private String id;
 	private Cliente clienteEnvia;
 	private Cliente clienteRecebe;
 	private BigDecimal valor;
