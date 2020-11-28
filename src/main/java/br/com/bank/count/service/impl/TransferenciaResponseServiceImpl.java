@@ -6,28 +6,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import br.com.bank.count.dto.ClienteDto;
 import br.com.bank.count.dto.TransferenciaDto;
 import br.com.bank.count.entity.Cliente;
 import br.com.bank.count.entity.Transferencia;
 import br.com.bank.count.entity.Transferencia.Status;
-import br.com.bank.count.enums.BankBussinessErrorCodeEnum;
 import br.com.bank.count.exception.BankBussinessException;
 import br.com.bank.count.repository.TransferenciaRepository;
 import br.com.bank.count.service.ClienteService;
 import br.com.bank.count.service.TransferenciaResponseService;
+import br.com.bank.count.utils.TransferenciaValidateUtils;
 
 @Service
 public class TransferenciaResponseServiceImpl implements TransferenciaResponseService {
 
-	private static final Double transferMax = 1000.00;
-
 	private TransferenciaRepository transRepository;
+	private TransferenciaValidateUtils validateUtils;
 	private ClienteService cliService;
 
 	@Autowired
-	public TransferenciaResponseServiceImpl(TransferenciaRepository transRepository, ClienteService cliService) {
+	public TransferenciaResponseServiceImpl(TransferenciaRepository transRepository, TransferenciaValidateUtils validateUtils, ClienteService cliService) {
 		this.transRepository = transRepository;
+		this.validateUtils = validateUtils;
 		this.cliService = cliService;
 	}
 
@@ -36,8 +35,7 @@ public class TransferenciaResponseServiceImpl implements TransferenciaResponseSe
 			BigDecimal valorTransferencia) {
 		TransferenciaDto transferenciaDto = null;
 		try {
-			validateTransfer(clienteEnvia, clienteRecebe, valorTransferencia);
-
+			validateUtils.validateTransfer(clienteEnvia, clienteRecebe, valorTransferencia);
 			if (ObjectUtils.isEmpty(clienteEnvia) && ObjectUtils.isEmpty(clienteRecebe)) {
 				Boolean debitarValorDaTransacao = cliService.debitarValorDaTransacao(clienteEnvia, clienteRecebe,
 						valorTransferencia);
@@ -79,38 +77,6 @@ public class TransferenciaResponseServiceImpl implements TransferenciaResponseSe
 			return tranResponse;
 		}
 		return null;
-	}
-
-	private void validateTransfer(Cliente cliEnvia, Cliente cliRecebe, BigDecimal valor) {
-
-		if (ObjectUtils.isEmpty(cliEnvia)) {
-			throw new BankBussinessException(BankBussinessErrorCodeEnum.DADOS_INVALIDO);
-		}
-
-		if (ObjectUtils.isEmpty(cliRecebe)) {
-			throw new BankBussinessException(BankBussinessErrorCodeEnum.DADOS_INVALIDO);
-		}
-
-		ClienteDto buscarClienteEnvia;
-		buscarClienteEnvia = cliService.buscarClienteNumConta(cliEnvia.getNumConta());
-		if (ObjectUtils.isEmpty(buscarClienteEnvia)) {
-			throw new BankBussinessException(BankBussinessErrorCodeEnum.NAO_EXISTE_CLIENTE_ENVIO);
-		}
-
-		ClienteDto buscarClienteRecebe;
-		buscarClienteRecebe = cliService.buscarClienteNumConta(cliRecebe.getNumConta());
-		if (ObjectUtils.isEmpty(buscarClienteRecebe)) {
-			throw new BankBussinessException(BankBussinessErrorCodeEnum.NAO_EXISTE_CLIENTE_RECEBE);
-		}
-
-		if (transferMax < valor.doubleValue()) {
-			throw new BankBussinessException(BankBussinessErrorCodeEnum.TRANSFERENCIA_LIMITE);
-		}
-
-		if (buscarClienteEnvia.getValor().doubleValue() < valor.doubleValue()) {
-			throw new BankBussinessException(BankBussinessErrorCodeEnum.SALDO_INVALIDO);
-		}
-
 	}
 
 }
