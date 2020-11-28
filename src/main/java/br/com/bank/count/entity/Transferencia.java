@@ -29,7 +29,8 @@ public class Transferencia implements Serializable {
 	
 	@Id
 	private Long id;
-	private Cliente cliente;
+	private Cliente clienteEnvia;
+	private Cliente clienteRecebe;
 	private BigDecimal valor;
 	private Status status;
 	private LocalDateTime data;

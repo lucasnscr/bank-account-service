@@ -1,4 +1,4 @@
-package br.com.bank.count.exceptions.enums;
+package br.com.bank.count.enums;
 
 import java.util.Properties;
 

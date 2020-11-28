@@ -1,4 +1,4 @@
-package br.com.bank.count.controller.impl;
+package br.com.bank.count.controller;
 
 import java.util.List;
 
@@ -12,14 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.bank.count.controller.IClienteController;
 import br.com.bank.count.dto.ClienteDto;
-import br.com.bank.count.entity.Cliente;
 import br.com.bank.count.service.ClienteService;
 
 @RestController
-@RequestMapping("/Clientes")
-public class ClienteController implements IClienteController {
+@RequestMapping("/clientes")
+public class ClienteController {
 	
 
 	private ClienteService cliService;
@@ -40,10 +38,10 @@ public class ClienteController implements IClienteController {
 
 	@PostMapping
 	public
-	ResponseEntity<ClienteDto> cadastraCliente(@RequestBody Cliente cliente, UriComponentsBuilder uriBuilder) {
-		ClienteDto cadastraCliente = cliService.cadastraCliente(cliente);
-		ResponseEntity<ClienteDto> responseEntity = new ResponseEntity<>(cadastraCliente,HttpStatus.CREATED);
-		responseEntity.created(uriBuilder.path("/Clientes/{id}").buildAndExpand(cadastraCliente.getId()).toUri());
+	ResponseEntity<Long> cadastraCliente(@RequestBody ClienteDto clienteDto, UriComponentsBuilder uriBuilder) {
+		Long cadastraCliente = cliService.cadastraCliente(clienteDto);
+		ResponseEntity<Long> responseEntity = new ResponseEntity<>(cadastraCliente,HttpStatus.CREATED);
+		responseEntity.created(uriBuilder.path("/Clientes/{id}").buildAndExpand(cadastraCliente).toUri());
 		return responseEntity;
 	}
 

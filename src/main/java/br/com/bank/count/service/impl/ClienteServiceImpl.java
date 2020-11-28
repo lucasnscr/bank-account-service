@@ -1,6 +1,7 @@
 package br.com.bank.count.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -11,6 +12,8 @@ import org.springframework.util.ObjectUtils;
 
 import br.com.bank.count.dto.ClienteDto;
 import br.com.bank.count.entity.Cliente;
+import br.com.bank.count.enums.BankBussinessErrorCodeEnum;
+import br.com.bank.count.exception.BankBussinessException;
 import br.com.bank.count.repository.ClienteRepository;
 import br.com.bank.count.service.ClienteService;
 
@@ -20,13 +23,26 @@ public class ClienteServiceImpl implements ClienteService{
 	private ClienteRepository cliRepo;
 
 	@Override
-	public ClienteDto cadastraCliente(Cliente cliente) {
-		ClienteDto cliDto = null;
-		if (!ObjectUtils.isEmpty(cliente)) {
-			Cliente cli = cliRepo.save(cliente);
-			if (ObjectUtils.isEmpty(cli)) {
-				cliDto = new ClienteDto(cli);
+	public Long cadastraCliente(ClienteDto clienteDto) {
+		Long cliDto = null;
+		if (!ObjectUtils.isEmpty(clienteDto)) {
+			Cliente cliData = cliRepo.findByNumConta(clienteDto.getNumConta());
+			if (ObjectUtils.isEmpty(cliData)) {
+				Cliente cliente = new Cliente();
+				cliente.setNome(clienteDto.getNome());
+				cliente.setNumConta(clienteDto.getNumConta());
+				cliente.setValor(clienteDto.getValor());
+				Cliente cli = cliRepo.save(cliente);
+				if (ObjectUtils.isEmpty(cli)) {
+					cliDto = cli.getId();
+				}else {
+					throw new BankBussinessException(BankBussinessErrorCodeEnum.ERRO_GRAVAR_DADO);
+				}
+				
+			}else {
+				throw new BankBussinessException(BankBussinessErrorCodeEnum.CLIENTE_EXISTENTE);
 			}
+			
 		}
 		return cliDto;
 	}
@@ -37,12 +53,15 @@ public class ClienteServiceImpl implements ClienteService{
 		Iterable<Cliente> clienteIt = cliRepo.findAll();
 		if (null != clienteIt) {
 			List<Cliente> clienteList = toList(clienteIt);
+			clienteDtoList = new ArrayList<ClienteDto>();
 			if (!CollectionUtils.isEmpty(clienteList)) {
 				for (Cliente cliente : clienteList) {
 					clienteDtoList.add(new ClienteDto(cliente));
 				}
 				
 			}
+		}else {
+			throw new BankBussinessException(BankBussinessErrorCodeEnum.BUSCA_SEM_RESULTADO);
 		}
 		
 		
@@ -57,6 +76,8 @@ public class ClienteServiceImpl implements ClienteService{
 			if (!ObjectUtils.isEmpty(cliente)) {
 				cliDto =  new ClienteDto(cliente);
 			}
+		}else {
+			throw new BankBussinessException(BankBussinessErrorCodeEnum.BUSCA_SEM_RESULTADO);
 		}
 		return cliDto;
 	}
@@ -83,7 +104,7 @@ public class ClienteServiceImpl implements ClienteService{
 		
 	}
 
-	public static <T> List<T> toList(final Iterable<T> iterable) {
+	private static <T> List<T> toList(final Iterable<T> iterable) {
 		return StreamSupport.stream(iterable.spliterator(), false)
 				.collect(Collectors.toList());
 	}

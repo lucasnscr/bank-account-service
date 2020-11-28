@@ -8,7 +8,7 @@ import br.com.bank.count.entity.Cliente;
 
 public interface ClienteService {
 	
-	ClienteDto cadastraCliente(Cliente cliente);
+	Long cadastraCliente(ClienteDto cliente);
 	List<ClienteDto> listClientes();
 	ClienteDto buscarClienteNumConta(Integer numConta);
 	Boolean debitarValorDaTransacao(Cliente clienteEnvia, Cliente clienteRecebe, BigDecimal valorTransferencia);

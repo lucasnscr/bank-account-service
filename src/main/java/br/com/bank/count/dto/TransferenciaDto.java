@@ -9,22 +9,21 @@ import br.com.bank.count.entity.Transferencia;
 import br.com.bank.count.entity.Transferencia.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 public class TransferenciaDto implements Serializable{
 	
 	public TransferenciaDto(Transferencia transferencia) {
-		this(transferencia.getId(), transferencia.getCliente(), transferencia.getValor(), transferencia.getStatus(), LocalDateTime.now());
+		this(transferencia.getId(), transferencia.getClienteEnvia(), transferencia.getClienteRecebe(), transferencia.getValor(), transferencia.getStatus(), LocalDateTime.now());
 	}
-
+	
 	private static final long serialVersionUID = 1L;
 	private Long id;
-	private Cliente cliente;
+	private Cliente clienteEnvia;
+	private Cliente clienteRecebe;
 	private BigDecimal valor;
 	private Status status;
 	private LocalDateTime data;

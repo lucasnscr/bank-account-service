@@ -10,13 +10,11 @@ import javax.validation.constraints.Size;
 import br.com.bank.count.entity.Cliente;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 public class ClienteDto implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -35,8 +33,6 @@ public class ClienteDto implements Serializable{
 	
 	public ClienteDto(Cliente c){
 		this(c.getId(), c.getNome(), c.getNumConta(), c.getValor());		
-		
-		
 	}
 
 }
