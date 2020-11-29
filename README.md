@@ -59,7 +59,6 @@ Para a realização do projeto foram utilizada as seguintes tecnologias:
 - Redis
 - Swagger
 - Junit
-- ArchUnit
 - Docker
 - Postman
 - Lombok
