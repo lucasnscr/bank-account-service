@@ -35,7 +35,13 @@ Após subir a aplicação, utilize as collections do Postman disponibilizada par
 
 ### Dockerfile
 
-Está sendo disponibilizado um dockerfile para a execução da aplicação em ambiente de container
+Está sendo disponibilizado um dockerfile para a execução da aplicação em ambiente de container. Utilizando um plugin disponibilizado pela Spotify, onde uma vez inserido o plugin e o seu arquivo dockerfile, via maven você executa o comando __ mvn package __ ,esse comando irá gerar sua imagem. 
+
+Após a execução do  __ mvn package __ , o próximo comando que será executado é o  __ docker images __  que irá listar as suas imagens docker.
+
+Agora precisara rodar o comando  __ docker run -p 8000:8000 lucasnscr/spring-docker-spotify:1.0.0-SNAPSHOT __  feito isso a aplicação já está rodando no ambiente com o docker.
+
+Obs: É preciso executar os compandos para exposição do Redis e do RabbitMQ, se não a aplicação não irá conseguir conectar.
 
 ### Tecnologias
 
@@ -52,3 +58,4 @@ Para a realização do projeto foram utilizada as seguintes tecnologias:
 - Docker
 - Postman
 - Lombok
+- Docker Maven Plugin
