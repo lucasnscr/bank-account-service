@@ -30,6 +30,8 @@ public class TransferenciaServiceImpl implements TransferenciaService {
 		this.cliRepository = cliRepository;
 	}
 
+
+	
 	@Override
 	public List<TransferenciaDtoResponse> listTransferencias(String numConta) {
 		List<TransferenciaDtoResponse> transferenciaDtoResponse = null;

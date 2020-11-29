@@ -22,6 +22,12 @@ public class TransferenciaValidateUtils {
 		this.cliService = cliService;
 	}
 	
+	/**
+	 * Metodo que realiza validação da requisição para a montagem da mensagem para o evento de transferencia
+	 * @param cliEnvia
+	 * @param cliRecebe
+	 * @param valor
+	 */
 	public void validateTransfer(Cliente cliEnvia, Cliente cliRecebe, BigDecimal valor) {
 
 		if (ObjectUtils.isEmpty(cliEnvia)) {

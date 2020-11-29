@@ -15,6 +15,14 @@ public enum BankBussinessErrorCodeEnum implements IErrorCode{
 	BUSCA_SEM_RESULTADO("A consulta nao obteve resultado", 10, "BANK-COUNT-SERVICE", "Consulta", HttpStatus.UNPROCESSABLE_ENTITY);
 	
 	
+	/**
+	 * Construtor do enum com os erros mapeados no fluxo transacional do sistema
+	 * @param message
+	 * @param codError
+	 * @param origin
+	 * @param operation
+	 * @param httpCode
+	 */
 	BankBussinessErrorCodeEnum(
 			String message,
 			Integer codError,

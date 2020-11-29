@@ -7,7 +7,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +19,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.com.bank.count.dto.ClienteDto;
 import br.com.bank.count.exception.BankBussinessException;
 import br.com.bank.count.service.ClienteService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/clientes")
@@ -32,7 +34,12 @@ public class ClienteController {
 	public ClienteController(ClienteService cliService) {
 		this.cliService = cliService;
 	}
-	
+
+	@ApiOperation(value = "Retorna uma lista de clientes")
+	@ApiResponses(value = {
+		    @ApiResponse(code = 200, message = "OK"),
+		    @ApiResponse(code = 422, message = "Excecao"),
+		})
 	@GetMapping("/todos")
 	public
 	ResponseEntity<List<ClienteDto>> listCliente() {
@@ -43,7 +50,12 @@ public class ClienteController {
 			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
 		}
 	}
-
+	
+	@ApiOperation(value = "Retorna um cliente")
+	@ApiResponses(value = {
+		    @ApiResponse(code = 200, message = "OK"),
+		    @ApiResponse(code = 422, message = "Excecao"),
+		})
 	@GetMapping("/")
 	public
 	ResponseEntity<ClienteDto> buscaPorNumConta(@RequestParam("numConta") String numConta) {
@@ -56,7 +68,11 @@ public class ClienteController {
 		}
 	}
 
-	@ExceptionHandler({ BankBussinessException.class})
+	@ApiOperation(value = "Cadastra uma cliente")
+	@ApiResponses(value = {
+		    @ApiResponse(code = 201, message = "OK"),
+		    @ApiResponse(code = 422, message = "Excecao"),
+		})
 	@PostMapping
 	public
 	ResponseEntity<String> cadastraCliente(@Valid @RequestBody ClienteDto clienteDto, UriComponentsBuilder uriBuilder) {

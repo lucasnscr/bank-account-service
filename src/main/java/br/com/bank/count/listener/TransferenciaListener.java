@@ -24,7 +24,10 @@ public class TransferenciaListener {
 		this.tranResponseService = tranResponseService;
 	}
 	
-	
+	/**
+	 * Metodo que escuta e captura as mensagens e em seguida, processa para camada de negocio para efetivacao da transferencia
+	 * @param msgTransferenciaDto
+	 */
 	@StreamListener(target = EventEnum.INPUT, condition = "headers['TRANSFERENCIA']=='EVENT_TRANSFERENCIA'")
 	public void getTransferencia(Message<TransferenciaDto> msgTransferenciaDto) {
 		try {

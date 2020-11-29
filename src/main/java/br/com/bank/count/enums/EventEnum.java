@@ -9,7 +9,10 @@ public enum EventEnum {
 	public static final String OUTPUT = "output";
 	
 	private String descricao;
-	
+	/**
+	 * Construtor para mapeamento do evento de transferencia
+	 * @param descricao
+	 */
 	 EventEnum(String descricao) {
 		this.descricao = descricao;
 	}

@@ -21,6 +21,9 @@ import br.com.bank.count.exception.BankBussinessException;
 import br.com.bank.count.exception.BankException;
 import br.com.bank.count.service.TransferenciaRequestService;
 import br.com.bank.count.service.TransferenciaService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/transferencia")
@@ -35,6 +38,11 @@ public class TransferenciaController {
 		this.tranRequestService = tranRequestService;
 	}
 
+	@ApiOperation(value = "busca todas as transferencias de um cliente")
+	@ApiResponses(value = {
+		    @ApiResponse(code = 200, message = "OK"),
+		    @ApiResponse(code = 422, message = "Excecao"),
+		})
 	@GetMapping("/")
 	public
 	ResponseEntity<List<TransferenciaDtoResponse>> listTransferencias(@RequestParam("numConta") String numConta) {
@@ -47,6 +55,11 @@ public class TransferenciaController {
 		}
 	}
 
+	@ApiOperation(value = "Posta na fila uma mensagem do Evento de Transferencia")
+	@ApiResponses(value = {
+		    @ApiResponse(code = 201, message = "OK"),
+		    @ApiResponse(code = 422, message = "Excecao"),
+		})
 	@PostMapping
 	public
 	HttpStatus realizaTransferencia(@Valid @RequestBody TransferenciaDto transferenciaDto,  UriComponentsBuilder uriBuilder) {
