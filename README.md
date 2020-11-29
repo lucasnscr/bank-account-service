@@ -41,7 +41,12 @@ Após a execução do  __ mvn package __ , o próximo comando que será executad
 
 Agora precisara rodar o comando  __ docker run -p 8000:8000 lucasnscr/spring-docker-spotify:1.0.0-SNAPSHOT __  feito isso a aplicação já está rodando no ambiente com o docker.
 
+
+
 Obs: É preciso executar os compandos para exposição do Redis e do RabbitMQ, se não a aplicação não irá conseguir conectar.
+
+
+Obs: Caso não consiga conectar via docker, voce poderá executar o serviço da seguinte forma. Com o terminal, entra na pasta raiz do projeto e execute o comando __  mvn clean install -U  __  após esse comando, entra no diretório target do projeto, nessa pasta está o .jar do serviço, execute o seguinte comando __ java -jar bank-count-service.jar __
 
 ### Tecnologias
 
