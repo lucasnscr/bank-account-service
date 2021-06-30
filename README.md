@@ -1,56 +1,55 @@
 # bank-account-service
 
-##Descrição do Projeto
-🚀 Projeto que simula a criação de uma conta digital e transferência entre as contas criadas.
+##Project description
+🚀 Project that simulates the creation of a digital account and transfer between the created accounts.
 
 
+## Installation ##
 
-## Instalação ##
-
-É necessário instalar alguns itens: 
-- Docker 
+It is necessary to install some items:
+- Docker
 - Java 11
 - Maven
 
-### Comandos necessários para rodar o Redis ###
+### Commands needed to run Redis ###
 
-Após instalar o Docker, abra o terminal no diretório raiz do projeto, que já vai configurado um docker-compose. Esse arquivo serve subir um container de Redis, banco utilizado para armazenar os dados. O comando para que precisa ser executado no terminal é o seguinte: docker-compose	up	-d 
+After installing Docker, open the terminal in the root directory of the project, which has already configured a docker-compose. This file serves to upload a Redis container, the database used to store the data. The command that needs to be run in the terminal is as follows: docker-compose up -d
 
 #### RabbitMq
 
-Para ter um controle transacional na camada de transferências, foi feita a utilização de um Message Broker, o RabbitMQ. para a utilização do Rabbit, é preciso rodar mais um comando. Abra o terminal e rode o seguinte comando: 
+To have transactional control in the transfer layer, a Message Broker, RabbitMQ, was used. to use Rabbit, you need to run one more command. Open the terminal and run the following command:
 docker run --rm -it --hostname localhost -p 15672:15672 -p 5672:5672 rabbitmq:3-management
 
 ### Features
 
-- [x] Cadastro de cliente
-- [x] Consulta de cliente
-- [x] Cadastro de cliente por conta
-- [x] Consulta de Transferência por cliente
-- [x] Transferência de até R$ 1000,00 entre dois clientes cadastrados
+- [x] Customer registration
+- [x] Customer query
+- [x] Customer registration per account
+- [x] Transfer query per customer
+- [x] Transfer of up to R$1000.00 between two registered customers
 
 ### Collections
 
-Após subir a aplicação, utilize as collections do Postman disponibilizada para realizar as requisições. https://www.postman.com/collections/91fb55fa953240feab88
+After uploading the application, use the Postman collections provided to make the requests. https://www.postman.com/collections/91fb55fa953240feab88
 
 ### Dockerfile
 
-Está sendo disponibilizado um dockerfile para a execução da aplicação em ambiente de container. Utilizando um plugin disponibilizado pela Spotify, onde uma vez inserido o plugin e o seu arquivo dockerfile, via maven você executa o comando __ mvn package __ ,esse comando irá gerar sua imagem. 
+A dockerfile is being made available to run the application in a container environment. Using a plugin provided by Spotify, where once inserted the plugin and its dockerfile, via maven you run the command __ mvn package __ , this command will generate your image.
 
-Após a execução do  __ mvn package __ , o próximo comando que será executado é o  __ docker images __  que irá listar as suas imagens docker.
+After running __ mvn package __ , the next command that will be run is __ docker images __ which will list your docker images.
 
-Agora precisara rodar o comando  __ docker run -p 8000:8000 lucasnscr/spring-docker-spotify:1.0.0-SNAPSHOT __  feito isso a aplicação já está rodando no ambiente com o docker.
-
-
-
-Obs: É preciso executar os compandos para exposição do Redis e do RabbitMQ, se não a aplicação não irá conseguir conectar.
+Now you will need to run the command __ docker run -p 8000:8000 lucasnscr/spring-docker-spotify:1.0.0-SNAPSHOT __ done that the application is already running in the environment with the docker.
 
 
-Obs: Caso não consiga conectar via docker, voce poderá executar o serviço da seguinte forma. Com o terminal, entra na pasta raiz do projeto e execute o comando __  mvn clean install -U  __  após esse comando, entra no diretório target do projeto, nessa pasta está o .jar do serviço, execute o seguinte comando __ java -jar bank-count-service.jar __
 
-### Tecnologias
+Note: It is necessary to run the commands to expose Redis and RabbitMQ, otherwise the application will not be able to connect.
 
-Para a realização do projeto foram utilizada as seguintes tecnologias: 
+
+Note: If you cannot connect via docker, you can run the service as follows. With the terminal, enter the project's root folder and execute the command __ mvn clean install -U __ after this command, enter the project's target directory, in this folder is the .jar of the service, execute the following command __ java -jar bank -count-service.jar __
+
+### Technologies
+
+The following technologies were used to carry out the project:
 - Java 11
 - Maven
 - SpringBoot
